@@ -1,6 +1,8 @@
 /* 10. Implement a program for stack that performs following operations using array:
        PUSH, POP, PEEP, CHANGE & DISPLAY */
 
+/* This is manually created stack. */
+
 import java.util.Scanner;
 
 class StackImplement {
