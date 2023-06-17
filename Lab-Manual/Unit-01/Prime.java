@@ -1,3 +1,5 @@
+// 8. Write a program to check whether a number is prime or not.
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
