@@ -1,14 +1,13 @@
 // 4. Write a program to find factorial of a number. (Using Loop)
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
+import java.util.Scanner;
 
 public class FactorialLoop {
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
+        Scanner input = new Scanner(System.in);
         int factorial = 1;
         System.out.print("Enter a number : ");
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int n = Integer.parseInt(br.readLine());
+        int n = input.nextInt();
         for (int i = 1; i <= n; i++) {
             factorial *= i;
         }

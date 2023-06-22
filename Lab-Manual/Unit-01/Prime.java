@@ -1,14 +1,12 @@
 // 8. Write a program to check whether a number is prime or not.
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.util.Scanner;
 
 public class Prime {
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
+        Scanner input = new Scanner(System.in);
         System.out.print("Enter Number = ");
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int no = Integer.parseInt(br.readLine());
+        int no = input.nextInt();
         int flag = 0;
 
         for (int i = 2; i <= Math.sqrt(no); i++) {
