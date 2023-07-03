@@ -4,55 +4,67 @@
 import java.util.Scanner;
 
 class StackImplement {
-    int top = -1;
-    int[] a = new int[100];
+    int top, size;
+    int[] stack;
+
+    public void initializeStack(int size) {
+        stack = new int[size];
+        this.size = size;
+        top = -1;
+    }
 
     public void push(int n) {
-        if (top >= 100) {
+        if (top == size - 1) {
             System.out.println("Stack Overflow.");
         } else {
             top++;
-            a[top] = n;
+            stack[top] = n;
+            System.out.println("Pushed " + n + " onto the stack.");
         }
     }
 
     public int pop() {
         if (top <= -1) {
+            System.out.println("Stack Underflow.");
             return -1;
         } else {
-            return a[top--];
+            return stack[top--];
         }
     }
 
-    public int peek() {
+    public void peek() {
         if (top <= -1) {
             System.out.println("Stack Underflow.");
-            return -1;
         } else {
-            return a[top];
+            System.out.println("Top Element is : " + stack[top]);
         }
     }
 
-    public void change(int i, int n) {
-        if (top - i + 1 <= 0) {
-            System.out.println("Stack Underflow.");
-        } else {
-            a[i] = n;
+    public void change(int position, int n) {
+        if (top == -1) {
+            System.out.println("Stack is empty");
+        }
+        else if (position < 0 || position > top) {
+            System.out.println("Invalid position");
+        }
+        else {
+            stack[top - position] = n;
+            System.out.println("Changed position " + position + " to " + n);
         }
     }
 
     public void display() {
-        for (int i = 0; i <= top; i++) {
-            System.out.print(a[i] + "   ");
+        System.out.println("Elements of stack are : ");
+        for (int i = top; i >= 0; i--) {
+            System.out.println(stack[i]);
         }
     }
 
-    public int peep(int i) {
-        if (top - i + 1 <= 0) {
-            System.out.println("Stack Underflow.");
-            return -1;
+    public void peep(int i) {
+        if (top == -1) {
+            System.out.println("Stack is empty.");
         } else {
-            return a[i];
+            System.out.println("Element at index " + i + " is : " + stack[i]);
         }
     }
 }
@@ -60,7 +72,10 @@ class StackImplement {
 public class StackMethods {
     public static void main(String[] args) {
         Scanner input = new Scanner(System.in);
+        System.out.print("Enter the size of stack : ");
+        int size = input.nextInt();
         StackImplement si = new StackImplement();
+        si.initializeStack(size);
         System.out.println();
 
 
@@ -75,8 +90,6 @@ public class StackMethods {
             System.out.println("To exit press \"0\"");
             System.out.print("Enter your choice : ");
             int c = input.nextInt();
-            repeat:
-
             switch (c) {
                 case 1:
                     System.out.print("Which element you want to push : ");
@@ -84,17 +97,18 @@ public class StackMethods {
                     break;
 
                 case 2:
-                    System.out.println(si.pop());
+                    int n = si.pop();
+                    System.out.println("Popped " + n + " from the stack.");
                     break;
 
                 case 3:
-                    int Peek = si.peek();
-                    System.out.println(Peek);
+                    si.peek();
                     break;
 
                 case 4:
-                    System.out.print("Which element you want to change : ");
-                    si.peep(input.nextInt());
+                    System.out.print("Enter index : ");
+                    int index = input.nextInt();
+                    si.peep(index);
                     break;
 
                 case 5:
@@ -111,7 +125,7 @@ public class StackMethods {
                     break;
 
                 case 0:
-                    break repeat;
+                    break;
 
                 default:
                     System.out.println("Invalid Input.");
