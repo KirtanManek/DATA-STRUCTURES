@@ -1,51 +1,20 @@
 import java.util.Scanner;
 
 public class InfixToPostfix {
-    static InfixToPostfix obj = new InfixToPostfix();
-    static int top = -1;
-    char[] ch = new char[100];
-
     public static void main(String[] args) {
-
         Scanner input = new Scanner(System.in);
         String infix;
         System.out.print("Enter the infix expression you want to convert to postfix : ");
         infix = input.nextLine();
-        System.out.println("Postfix expression for the given infix expression is : " + obj.toPostfix(infix));
+        System.out.println("Postfix expression for the given infix expression is : " + toPostfix(infix));
     }
 
-    public void push(char c) {
-        if (top >= 100) {
-            System.out.println("Overflow");
-        } else {
-            top++;
-            ch[top] = c;
-        }
-    }
-
-    public char peek() {
-        if (top <= -1) {
-            System.out.println("UnderFlow");
-            return 0;
-        } else {
-            return ch[top];
-        }
-
-    }
-
-    public char pop() {
-        if (top == -1) {
-            System.out.println("Underflow");
-            return 0;
-        }
-        return ch[top--];
-    }
-
-    public String toPostfix(String infix) {
+    public static String toPostfix(String infix) {
+        StackIP obj = new StackIP(infix.length());
         char symbol;
         StringBuilder postfix = new StringBuilder();
 
-        for (int i = 0; i < infix.length(); ++i) {
+        for (int i = 0; i < infix.length(); i++) {
             symbol = infix.charAt(i);
 
             if (Character.isLetter(symbol))
@@ -54,22 +23,22 @@ public class InfixToPostfix {
                 obj.push(symbol);
             } else if (symbol == ')') {
                 while (obj.peek() != '(') {
-                    postfix.append(pop());
+                    postfix.append(obj.pop());
                 }
                 obj.pop();
             } else {
-                while (top != -1 && !(obj.peek() == '(') && precedent(symbol) <= precedent(obj.peek()))
+                while (obj.isEmpty() && !(obj.peek() == '(') && precedent(symbol) <= precedent(obj.peek()))
                     postfix.append(obj.pop());
                 obj.push(symbol);
             }
         }
 
-        while (top != -1)
+        while (obj.isEmpty())
             postfix.append(obj.pop());
         return postfix.toString();
     }
 
-    public int precedent(char chr) {
+    public static int precedent(char chr) {
         return switch (chr) {
             case '+', '-' -> 1;
             case '*', '/' -> 2;
@@ -78,4 +47,45 @@ public class InfixToPostfix {
         };
     }
 
+}
+class StackIP{
+    int top, size;
+    char[] stack;
+
+    StackIP(int size) {
+        stack = new char[size];
+        this.size = size;
+        top = -1;
+    }
+
+    public void push(char n) {
+        if (top == size - 1) {
+            System.out.println("Stack Overflow.");
+        } else {
+            top++;
+            stack[top] = n;
+        }
+    }
+
+    public char pop() {
+        if (top <= -1) {
+            System.out.println("Stack Underflow.");
+            return ' ';
+        } else {
+            return stack[top--];
+        }
+    }
+
+    public char peek() {
+        if (top <= -1) {
+            System.out.println("Stack Underflow.");
+            return ' ';
+        } else {
+            return stack[top];
+        }
+    }
+
+    public boolean isEmpty(){
+        return top > -1;
+    }
 }
