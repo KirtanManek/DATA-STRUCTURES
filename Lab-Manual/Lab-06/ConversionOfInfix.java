@@ -6,29 +6,8 @@ class ConversionOfInfix {
         Scanner input = new Scanner(System.in);
         System.out.print("Enter the infix expression you want to convert : ");
         String infix = input.nextLine();
-        while (true) {
-            System.out.println("1. To convert to postfix.");
-            System.out.println("2. To convert to prefix.");
-            System.out.println("3. To change infix string.");
-            System.out.println("0. To exit");
-            System.out.print("Enter choice : ");
-            int c = input.nextInt();
-            switch (c) {
-                case 1 ->
-                        System.out.println("Postfix expression for the given infix expression is : " + toPostfix(infix));
-                case 2 ->
-                        System.out.println("Prefix expression for the given infix expression is : " + toPrefix(infix));
-                case 3 -> {
-                    System.out.print("Enter new infix string : ");
-                    infix = input.next();
-                }
-                case 0 -> System.exit(0);
-                default -> {
-                    System.out.println("Invalid input.");
-                    System.exit(0);
-                }
-            }
-        }
+        System.out.println("Postfix expression for the given infix expression is : " + toPostfix(infix));
+        System.out.println("Prefix expression for the given infix expression is : " + toPrefix(infix));
     }
 
     public static String toPostfix(String infix) {
@@ -42,6 +21,7 @@ class ConversionOfInfix {
         // Step 2:
         char next;
         String POLISH = "";
+        int rank = 0;
 
         // Step 3:
         next = infix.charAt(i);
@@ -52,8 +32,13 @@ class ConversionOfInfix {
 
             // Step 5:
             while (stackPrecedence(stack.peek()) > inputPrecedence(next)) {
-                String temp = stack.pop().toString();
-                POLISH = POLISH + temp;
+                char temp = stack.pop();
+                POLISH += temp;
+                rank += calculateRank(temp);
+                if (rank < 1) {
+                    System.out.println("Invalid.");
+                    System.exit(0);
+                }
             }
 
             // Step 6:
@@ -69,7 +54,14 @@ class ConversionOfInfix {
         }
 
         // Step 8:
-        return POLISH;
+        if (rank != 1) {
+            System.out.println("Invalid.");
+            System.exit(0);
+            return "";
+        } else {
+            System.out.println("Valid.");
+            return POLISH;
+        }
     }
 
     public static String toPrefix(String infix) {
@@ -90,26 +82,37 @@ class ConversionOfInfix {
 
         // reversing postfix string to prefix
         for (int i = polish.length() - 1; i >= 0; i--) {
-            if (polish.charAt(i) == '(') {
-                prefix = prefix + ')';
-            } else if (polish.charAt(i) == ')') {
-                prefix = prefix + '(';
-            } else {
-                prefix = prefix + polish.charAt(i);
-            }
+            prefix = prefix + polish.charAt(i);
         }
         return prefix;
     }
 
+    public static int calculateRank(char chr) {
+        if (Character.isLetter(chr)) {
+            return 1;
+        } else {
+            return -1;
+        }
+    }
+
     public static int inputPrecedence(char chr) {
-        return switch (chr) {
-            case '+', '-' -> 1;
-            case '*', '/' -> 3;
-            case '^' -> 6;
-            case '(' -> 9;
-            case ')' -> 0;
-            default -> 7;
-        };
+        if (chr == '+' || chr == '-') {
+            return 1;
+        } else if (chr == '*' || chr == '/') {
+            return 3;
+        } else if (chr == '^') {
+            return 6;
+        } else if (Character.isLetter(chr)) {
+            return 7;
+        } else if (chr == '(') {
+            return 9;
+        } else if (chr == ')') {
+            return 0;
+        } else {
+            System.out.println("Invalid character in infix expression.");
+            System.exit(0);
+            return -1;
+        }
     }
 
     public static int stackPrecedence(char chr) {
