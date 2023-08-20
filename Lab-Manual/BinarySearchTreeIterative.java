@@ -1,3 +1,5 @@
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.Scanner;
 
 class BinarySearchTreeIterative {
@@ -27,7 +29,7 @@ class BinarySearchTreeIterative {
                     int deleteValue = sc.nextInt();
                     tree.delete(deleteValue);
                 }
-                case 3 -> tree.print();
+                case 3 -> tree.printTree();
                 case 4 -> {
                     System.out.print("Preorder Traversal: ");
                     tree.preorderTraversal(tree.root);
@@ -153,34 +155,19 @@ class BST {
 
         // If node has two children
         else {
-            // get successor method will find the minimum node from the right subtree of node to be deleted
-            Node successor = getSuccessor(current);
+            Node successor = current.right;
+            while (successor.left != null) {
+                successor = successor.left;
+            }
             if (current == root) {
-                root = successor;
+                root = current.right;
             } else if (isLeftChild) {
-                parent.left = successor;
+                parent.left = current.right;
             } else {
-                parent.right = successor;
+                parent.right = current.right;
             }
             successor.left = current.left;
         }
-    }
-    
-    // get successor method will find the minimum node from the right subtree of node to be deleted
-    public Node getSuccessor(Node node) {
-        Node current = node.right;
-        Node successor = null;
-        Node successorParent = null;
-        while (current != null) {
-            successorParent = successor;
-            successor = current;
-            current = current.left;
-        }
-        if (successor != node.right) {
-            successorParent.left = successor.right;
-            successor.right = node.right;
-        }
-        return successor;
     }
 
     void preorderTraversal(Node root) {
@@ -213,15 +200,27 @@ class BST {
         inorderTraversal(root.right);
     }
 
-    public void print() {
-        print("", root, false);
-    }
+    public void printTree() {
+        if (root == null) {
+            return;
+        }
+        Queue<Node> queue = new LinkedList<>();
+        queue.add(root);
 
-    public void print(String prefix, Node n, boolean isLeft) {
-        if (n != null) {
-            System.out.println (prefix + (isLeft ? "|-- " : "\\-- ") + n.data);
-            print(prefix + (isLeft ? "|   " : "    "), n.right, false);
-            print(prefix + (isLeft ? "|   " : "    "), n.left, true);
+        while (!queue.isEmpty()) {
+            int levelSize = queue.size();
+            for (int i = 0; i < levelSize; i++) {
+                Node node = queue.poll();
+                if(node != null) {
+                    System.out.print(node.data + " ");
+                    queue.add(node.left);
+                    queue.add(node.right);
+                }
+                else{
+                    System.out.print("null ");
+                }
+            }
+            System.out.println(); // Move to the next line after each level
         }
     }
 }
