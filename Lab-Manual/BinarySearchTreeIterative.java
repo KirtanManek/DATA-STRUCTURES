@@ -103,16 +103,13 @@ class BST {
     public void delete(int data) {
         Node current = root;
         Node parent = null;
-        boolean isLeftChild = false;
 
         // Search for the node to be deleted
         while (current != null && current.data != data) {
             parent = current;
             if (data < current.data) {
-                isLeftChild = true;
                 current = current.left;
             } else {
-                isLeftChild = false;
                 current = current.right;
             }
         }
@@ -127,7 +124,7 @@ class BST {
         if (current.left == null && current.right == null) {
             if (current == root) {
                 root = null;
-            } else if (isLeftChild) {
+            } else if (data < parent.data) {
                 parent.left = null;
             } else {
                 parent.right = null;
@@ -138,7 +135,7 @@ class BST {
         else if (current.right == null) {
             if (current == root) {
                 root = current.left;
-            } else if (isLeftChild) {
+            } else if (data < parent.data) {
                 parent.left = current.left;
             } else {
                 parent.right = current.left;
@@ -146,7 +143,7 @@ class BST {
         } else if (current.left == null) {
             if (current == root) {
                 root = current.right;
-            } else if (isLeftChild) {
+            } else if (data < parent.data) {
                 parent.left = current.right;
             } else {
                 parent.right = current.right;
@@ -161,7 +158,7 @@ class BST {
             }
             if (current == root) {
                 root = current.right;
-            } else if (isLeftChild) {
+            } else if (data < parent.data) {
                 parent.left = current.right;
             } else {
                 parent.right = current.right;
@@ -211,12 +208,11 @@ class BST {
             int levelSize = queue.size();
             for (int i = 0; i < levelSize; i++) {
                 Node node = queue.poll();
-                if(node != null) {
+                if (node != null) {
                     System.out.print(node.data + " ");
                     queue.add(node.left);
                     queue.add(node.right);
-                }
-                else{
+                } else {
                     System.out.print("null ");
                 }
             }
