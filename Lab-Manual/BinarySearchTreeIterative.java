@@ -56,12 +56,12 @@ class BinarySearchTreeIterative {
     }
 }
 
-class Node {
+class TreeNode {
     int data;
-    Node left;
-    Node right;
+    TreeNode left;
+    TreeNode right;
 
-    Node(int data) {
+    TreeNode(int data) {
         this.data = data;
         this.left = null;
         this.right = null;
@@ -69,16 +69,16 @@ class Node {
 }
 
 class BST {
-    Node root;
+    TreeNode root;
 
     void insert(int x) {
-        Node node = new Node(x);
+        TreeNode node = new TreeNode(x);
         if (root == null) {
             root = node;
             return;
         }
-        Node previous = null;
-        Node current = root;
+        TreeNode previous = null;
+        TreeNode current = root;
         while (current != null) {
             if (current.data > x) {
                 previous = current;
@@ -101,9 +101,8 @@ class BST {
     }
 
     public void delete(int data) {
-        Node current = root;
-        Node parent = null;
-
+        TreeNode current = root;
+        TreeNode parent = null;
         // Search for the node to be deleted
         while (current != null && current.data != data) {
             parent = current;
@@ -152,7 +151,7 @@ class BST {
 
         // If node has two children
         else {
-            Node successor = current.right;
+            TreeNode successor = current.right;
             while (successor.left != null) {
                 successor = successor.left;
             }
@@ -167,7 +166,7 @@ class BST {
         }
     }
 
-    void preorderTraversal(Node root) {
+    void preorderTraversal(TreeNode root) {
         if (root == null) {
             return;
         }
@@ -177,7 +176,7 @@ class BST {
         preorderTraversal(root.right);
     }
 
-    void postorderTraversal(Node root) {
+    void postorderTraversal(TreeNode root) {
         if (root == null) {
             return;
         }
@@ -187,7 +186,7 @@ class BST {
         System.out.print(root.data + " ");
     }
 
-    void inorderTraversal(Node root) {
+    void inorderTraversal(TreeNode root) {
         if (root == null) {
             return;
         }
@@ -201,13 +200,13 @@ class BST {
         if (root == null) {
             return;
         }
-        Queue<Node> queue = new LinkedList<>();
+        Queue<TreeNode> queue = new LinkedList<>();
         queue.add(root);
 
         while (!queue.isEmpty()) {
             int levelSize = queue.size();
             for (int i = 0; i < levelSize; i++) {
-                Node node = queue.poll();
+                TreeNode node = queue.poll();
                 if (node != null) {
                     System.out.print(node.data + " ");
                     queue.add(node.left);
