@@ -8,44 +8,38 @@ class BinarySearchTreeIterative {
         Scanner sc = new Scanner(System.in);
         while (true) {
             System.out.println("\nMenu:");
-            System.out.println("1. Insert a node");
-            System.out.println("2. Delete a node");
-            System.out.println("3. Display");
-            System.out.println("4. Preorder Traversal");
-            System.out.println("5. Postorder Traversal");
-            System.out.println("6. Inorder Traversal");
-            System.out.println("7. Exit");
+            System.out.println("1. Insert a Meaning in dictionary");
+            System.out.println("2. Delete a Meaning from dictionary");
+            System.out.println("3. Inorder Traversal");
+            System.out.println("4. Search Word");
+            System.out.println("0. Exit");
             System.out.print("Enter your choice: ");
             int choice = sc.nextInt();
 
             switch (choice) {
                 case 1 -> {
-                    System.out.print("Enter value to insert: ");
-                    int value = sc.nextInt();
-                    tree.insert(value);
+                    System.out.print("Enter word to insert: ");
+                    String k = sc.next();
+                    System.out.print("Enter its meaning: ");
+                    String v = sc.next();
+                    tree.insert(k, v);
                 }
                 case 2 -> {
-                    System.out.print("Enter value to delete: ");
-                    int deleteValue = sc.nextInt();
+                    System.out.print("Enter word to delete: ");
+                    String deleteValue = sc.next();
                     tree.delete(deleteValue);
                 }
-                case 3 -> tree.printTree();
-                case 4 -> {
-                    System.out.print("Preorder Traversal: ");
-                    tree.preorderTraversal(tree.root);
-                    System.out.println();
-                }
-                case 5 -> {
-                    System.out.print("Postorder Traversal: ");
-                    tree.postorderTraversal(tree.root);
-                    System.out.println();
-                }
-                case 6 -> {
+                case 3 -> {
                     System.out.print("Inorder Traversal: ");
                     tree.inorderTraversal(tree.root);
                     System.out.println();
                 }
-                case 7 -> {
+                case 4 -> {
+                    System.out.print("Enter word to search: ");
+                    String searchValue = sc.next();
+                    tree.searchWord(searchValue);
+                }
+                case 0 -> {
                     System.out.println("Exiting......");
                     sc.close();
                     System.exit(0);
@@ -57,12 +51,14 @@ class BinarySearchTreeIterative {
 }
 
 class TreeNode {
-    int data;
+    String key;
+    String value;
     TreeNode left;
     TreeNode right;
 
-    TreeNode(int data) {
-        this.data = data;
+    TreeNode(String key, String value) {
+        this.key = key;
+        this.value = value;
         this.left = null;
         this.right = null;
     }
@@ -71,8 +67,10 @@ class TreeNode {
 class BST {
     TreeNode root;
 
-    void insert(int x) {
-        TreeNode node = new TreeNode(x);
+    void insert(String key, String value) {
+        String k = key.toLowerCase();
+        String v = value.toLowerCase();
+        TreeNode node = new TreeNode(k, v);
         if (root == null) {
             root = node;
             return;
@@ -80,10 +78,10 @@ class BST {
         TreeNode previous = null;
         TreeNode current = root;
         while (current != null) {
-            if (current.data > x) {
+            if (current.key.compareTo(k) > 0) {
                 previous = current;
                 current = current.left;
-            } else if (current.data < x) {
+            } else if (current.key.compareTo(k) < 0) {
                 previous = current;
                 current = current.right;
             } else {
@@ -93,20 +91,37 @@ class BST {
 
         // here your previous node will be at last node where you want to insert, and
         // the current node will be null
-        if (previous.data > x) {
+        if (previous.key.compareTo(k) > 0) {
             previous.left = node;
         } else {
             previous.right = node;
         }
     }
 
-    public void delete(int data) {
+    public void searchWord(String key) {
+        String k = key.toLowerCase();
+        TreeNode current = root;
+        while (current != null) {
+            if (current.key.compareTo(k) > 0) {
+                current = current.left;
+            } else if (current.key.compareTo(k) < 0) {
+                current = current.right;
+            } else {
+                System.out.println("Meaning of " + key + " is " + current.value);
+                return;
+            }
+        }
+        System.out.println("Word not found");
+    }
+
+    public void delete(String key) {
+        key = key.toLowerCase();
         TreeNode current = root;
         TreeNode parent = null;
         // Search for the node to be deleted
-        while (current != null && current.data != data) {
+        while (current != null && current.key.compareTo(key) != 0) {
             parent = current;
-            if (data < current.data) {
+            if (key.compareTo(current.key) < 0) {
                 current = current.left;
             } else {
                 current = current.right;
@@ -115,7 +130,7 @@ class BST {
 
         // If node isn't found
         if (current == null) {
-            System.out.println("Node with data " + data + " not found");
+            System.out.println("Node with key " + key + " not found");
             return;
         }
 
@@ -123,7 +138,7 @@ class BST {
         if (current.left == null && current.right == null) {
             if (current == root) {
                 root = null;
-            } else if (data < parent.data) {
+            } else if (key.compareTo(parent.key) < 0) {
                 parent.left = null;
             } else {
                 parent.right = null;
@@ -134,7 +149,7 @@ class BST {
         else if (current.right == null) {
             if (current == root) {
                 root = current.left;
-            } else if (data < parent.data) {
+            } else if (key.compareTo(parent.key) < 0) {
                 parent.left = current.left;
             } else {
                 parent.right = current.left;
@@ -142,7 +157,7 @@ class BST {
         } else if (current.left == null) {
             if (current == root) {
                 root = current.right;
-            } else if (data < parent.data) {
+            } else if (key.compareTo(parent.key) < 0) {
                 parent.left = current.right;
             } else {
                 parent.right = current.right;
@@ -157,7 +172,7 @@ class BST {
             }
             if (current == root) {
                 root = current.right;
-            } else if (data < parent.data) {
+            } else if (key.compareTo(parent.key) < 0) {
                 parent.left = current.right;
             } else {
                 parent.right = current.right;
@@ -166,56 +181,13 @@ class BST {
         }
     }
 
-    void preorderTraversal(TreeNode root) {
-        if (root == null) {
-            return;
-        }
-
-        System.out.print(root.data + " ");
-        preorderTraversal(root.left);
-        preorderTraversal(root.right);
-    }
-
-    void postorderTraversal(TreeNode root) {
-        if (root == null) {
-            return;
-        }
-
-        postorderTraversal(root.left);
-        postorderTraversal(root.right);
-        System.out.print(root.data + " ");
-    }
-
     void inorderTraversal(TreeNode root) {
         if (root == null) {
             return;
         }
 
         inorderTraversal(root.left);
-        System.out.print(root.data + " ");
+        System.out.print(root.key + ": " + root.value + "\n");
         inorderTraversal(root.right);
-    }
-
-    public void printTree() {
-        if (root == null) {
-            return;
-        }
-        Queue<TreeNode> queue = new LinkedList<>();
-        queue.add(root);
-
-        while (!queue.isEmpty()) {
-            int levelSize = queue.size();
-            for (int i = 0; i < levelSize; i++) {
-                TreeNode node = queue.poll();
-                if (node != null) {
-                    System.out.print(node.data + " ");
-                    queue.add(node.left);
-                    queue.add(node.right);
-                } else {
-                    System.out.print("null ");
-                }
-            }
-            System.out.println(); // Move to the next line after each level
-        }
     }
 }
